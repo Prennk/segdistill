@@ -358,7 +358,6 @@ def save_checkpoint(model, args, is_best=False):
 
 if __name__ == '__main__':
     args = parse_args()
-    dist.init_process_group(backend='nccl')
 
     # reference maskrcnn-benchmark
     num_gpus = int(os.environ["WORLD_SIZE"]) if "WORLD_SIZE" in os.environ else 1
