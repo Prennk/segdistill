@@ -6,7 +6,7 @@ python3 train_baseline.py \
     --data data/CamVid/ \
     --save-dir save/ \
     --log-dir save/ \
-    --pretrained resnet18-imagenet.pth
+    --pretrained-base resnet18-imagenet.pth
 
 
 # CUDA_VISIBLE_DEVICES=0 \
