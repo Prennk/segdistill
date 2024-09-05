@@ -1,5 +1,5 @@
 CUDA_VISIBLE_DEVICES=0 \
-python3 -m torch.distributed.launch --nproc_per_node=1 train_baseline.py \
+python3 -m torchrun --nproc_per_node=1 train_baseline.py \
     --model deeplabv3 \
     --backbone resnet18 \
     --dataset camvid \
@@ -11,7 +11,7 @@ python3 -m torch.distributed.launch --nproc_per_node=1 train_baseline.py \
 
 
 # CUDA_VISIBLE_DEVICES=0 \
-#   python -m torch.distributed.launch --nproc_per_node=1 \
+#   python -m torchrun --nproc_per_node=1 \
 #   eval.py \
 #   --model deeplabv3 \
 #   --backbone resnet18 \
