@@ -246,6 +246,7 @@ def resnet101_v1b(pretrained=False, local_rank=None, **kwargs):
 def resnet18_v1s(pretrained=False, local_rank=None, **kwargs):
     model = ResNetV1b(BasicBlockV1b, [2, 2, 2, 2], deep_stem=True, **kwargs)
     if pretrained != 'None':
+        print("PRETRAINEDDDDDDDD:",pretrained)
         if local_rank is not None:
             old_dict = torch.load(pretrained, map_location=torch.device(local_rank))
         else:
