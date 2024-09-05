@@ -1,4 +1,4 @@
-    python train_baseline.py \
+    python3 train_baseline.py \
     --model deeplabv3 \
     --backbone resnet18 \
     --dataset camvid \
