@@ -148,9 +148,13 @@ class Trainer(object):
                                             norm_layer=BatchNorm2d,
                                             num_class=train_dataset.num_class).to(self.device)
 
+        # create logger
+        self.logger = setup_logger('train', args.log_dir, 0)
+        self.logger.info('Training with args: %s', args)
+
         self.model.eval()
         with torch.no_grad():
-            logger.info('Params: %.2fM FLOPs: %.2fG'
+            self.logger.info('Params: %.2fM FLOPs: %.2fG'
                 % (cal_param_size(self.model) / 1e6, cal_multi_adds(self.model, (1, 3, 1024, 2048))/1e9))
         
 
@@ -190,10 +194,6 @@ class Trainer(object):
 
         # create loss function
         self.criterion = SegCrossEntropyLoss(ignore_index=args.ignore_label, aux_weight=args.aux_weight).to(self.device)
-        
-        # create logger
-        self.logger = setup_logger('train', args.log_dir, 0)
-        self.logger.info('Training with args: %s', args)
         
         # initialize training states
         self.best_miou = 0.0
