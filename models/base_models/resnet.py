@@ -199,7 +199,7 @@ class ResNetV1b(nn.Module):
 
 
 
-def resnet18_v1b(pretrained=False, local_rank="cpu", **kwargs):
+def resnet18_v1b(pretrained=False, local_rank=None, **kwargs):
     model = ResNetV1b(BasicBlockV1b, [2, 2, 2, 2], **kwargs)
     if pretrained != 'None':
         if local_rank is not None:
