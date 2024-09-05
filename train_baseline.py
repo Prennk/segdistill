@@ -162,7 +162,7 @@ class Trainer(object):
         train_sampler = None
         train_batch_sampler = data.BatchSampler(data.RandomSampler(train_dataset), args.batch_size, drop_last=True)
         val_sampler = None
-        val_batch_sampler = data.BatchSampler(data.SequentialSampler(val_dataset), 1)
+        val_batch_sampler = data.BatchSampler(data.SequentialSampler(val_dataset), 1, drop_last=True)
 
         self.train_loader = data.DataLoader(dataset=train_dataset, 
                                             batch_sampler=train_batch_sampler,
