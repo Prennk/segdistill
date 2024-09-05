@@ -203,7 +203,7 @@ def resnet18_v1b(pretrained=False, local_rank=None, **kwargs):
     model = ResNetV1b(BasicBlockV1b, [2, 2, 2, 2], **kwargs)
     if pretrained != 'None':
         if torch.cuda.is_available():
-            device = 'cuda:{}'.format(local_rank)
+            device = 'cuda'
         else:
             device = 'cpu'
 
@@ -220,7 +220,7 @@ def resnet50_v1b(pretrained=False, local_rank=None, **kwargs):
     model = ResNetV1b(BottleneckV1b, [3, 4, 6, 3], **kwargs)
     if pretrained != 'None':
         if torch.cuda.is_available():
-            device = 'cuda:{}'.format(local_rank)
+            device = 'cuda'
         else:
             device = 'cpu'
 
@@ -237,7 +237,7 @@ def resnet101_v1b(pretrained=False, local_rank=None, **kwargs):
     model = ResNetV1b(BottleneckV1b, [3, 4, 23, 3], **kwargs)
     if pretrained != 'None':
         if torch.cuda.is_available():
-            device = 'cuda:{}'.format(local_rank)
+            device = 'cuda'
         else:
             device = 'cpu'
 
@@ -253,7 +253,7 @@ def resnet18_v1s(pretrained=False, local_rank=None, **kwargs):
     model = ResNetV1b(BasicBlockV1b, [2, 2, 2, 2], deep_stem=True, **kwargs)
     if pretrained != 'None':
         if torch.cuda.is_available():
-            device = 'cuda:{}'.format(local_rank)
+            device = 'cuda'
         else:
             device = 'cpu'
 
