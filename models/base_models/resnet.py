@@ -202,12 +202,10 @@ class ResNetV1b(nn.Module):
 def resnet18_v1b(pretrained=False, local_rank=None, **kwargs):
     model = ResNetV1b(BasicBlockV1b, [2, 2, 2, 2], **kwargs)
     if pretrained != 'None':
-        if torch.cuda.is_available():
-            device = 'cuda'
+        if local_rank is not None:
+            old_dict = torch.load(pretrained, map_location=torch.device(local_rank))
         else:
-            device = 'cpu'
-
-        old_dict = torch.load(pretrained, map_location=torch.device(device))
+            old_dict = torch.load(pretrained)
         model_dict = model.state_dict()
         old_dict = {k: v for k, v in old_dict.items() if (k in model_dict)}
         model_dict.update(old_dict)
@@ -219,12 +217,10 @@ def resnet18_v1b(pretrained=False, local_rank=None, **kwargs):
 def resnet50_v1b(pretrained=False, local_rank=None, **kwargs):
     model = ResNetV1b(BottleneckV1b, [3, 4, 6, 3], **kwargs)
     if pretrained != 'None':
-        if torch.cuda.is_available():
-            device = 'cuda'
+        if local_rank is not None:
+            old_dict = torch.load(pretrained, map_location=torch.device(local_rank))
         else:
-            device = 'cpu'
-
-        old_dict = torch.load(pretrained, map_location=torch.device(device))
+            old_dict = torch.load(pretrained)
         model_dict = model.state_dict()
         old_dict = {k: v for k, v in old_dict.items() if (k in model_dict)}
         model_dict.update(old_dict)
@@ -236,12 +232,10 @@ def resnet50_v1b(pretrained=False, local_rank=None, **kwargs):
 def resnet101_v1b(pretrained=False, local_rank=None, **kwargs):
     model = ResNetV1b(BottleneckV1b, [3, 4, 23, 3], **kwargs)
     if pretrained != 'None':
-        if torch.cuda.is_available():
-            device = 'cuda'
+        if local_rank is not None:
+            old_dict = torch.load(pretrained, map_location=torch.device(local_rank))
         else:
-            device = 'cpu'
-
-        old_dict = torch.load(pretrained, map_location=torch.device(device))
+            old_dict = torch.load(pretrained)
         model_dict = model.state_dict()
         old_dict = {k: v for k, v in old_dict.items() if (k in model_dict)}
         model_dict.update(old_dict)
@@ -252,12 +246,10 @@ def resnet101_v1b(pretrained=False, local_rank=None, **kwargs):
 def resnet18_v1s(pretrained=False, local_rank=None, **kwargs):
     model = ResNetV1b(BasicBlockV1b, [2, 2, 2, 2], deep_stem=True, **kwargs)
     if pretrained != 'None':
-        if torch.cuda.is_available():
-            device = 'cuda'
+        if local_rank is not None:
+            old_dict = torch.load(pretrained, map_location=torch.device(local_rank))
         else:
-            device = 'cpu'
-
-        old_dict = torch.load(pretrained, map_location=torch.device(device))
+            old_dict = torch.load(pretrained)
         
         model_dict = model.state_dict()
         old_dict = {k: v for k, v in old_dict.items() if (k in model_dict)}
@@ -269,12 +261,10 @@ def resnet18_v1s(pretrained=False, local_rank=None, **kwargs):
 def resnet50_v1s(pretrained=False, local_rank=None, **kwargs):
     model = ResNetV1b(BottleneckV1b, [3, 4, 6, 3], deep_stem=True, **kwargs)
     if pretrained != 'None':
-        if torch.cuda.is_available():
-            device = 'cuda:{}'.format(local_rank)
+        if local_rank is not None:
+            old_dict = torch.load(pretrained, map_location=torch.device(local_rank))
         else:
-            device = 'cpu'
-
-        old_dict = torch.load(pretrained, map_location=torch.device(device))
+            old_dict = torch.load(pretrained)
         model_dict = model.state_dict()
         old_dict = {k: v for k, v in old_dict.items() if (k in model_dict)}
         model_dict.update(old_dict)
@@ -285,12 +275,10 @@ def resnet50_v1s(pretrained=False, local_rank=None, **kwargs):
 def resnet101_v1s(pretrained=False, local_rank=None, **kwargs):
     model = ResNetV1b(BottleneckV1b, [3, 4, 23, 3], deep_stem=True, **kwargs)
     if pretrained != 'None':
-        if torch.cuda.is_available():
-            device = 'cuda:{}'.format(local_rank)
+        if local_rank is not None:
+            old_dict = torch.load(pretrained, map_location=torch.device(local_rank))
         else:
-            device = 'cpu'
-
-        old_dict = torch.load(pretrained, map_location=torch.device(device))
+            old_dict = torch.load(pretrained)
         model_dict = model.state_dict()
         old_dict = {k: v for k, v in old_dict.items() if (k in model_dict)}
         model_dict.update(old_dict)
