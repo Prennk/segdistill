@@ -97,10 +97,11 @@ def parse_args():
                         help='run validation every val-epoch')
     parser.add_argument('--skip-val', action='store_true', default=False,
                         help='skip validation during training')
+    parser.add_argument('--distributed', action='store_true', default=False, help='Enable distributed training')
     args = parser.parse_args()
 
-    num_gpus = int(os.environ["WORLD_SIZE"]) if "WORLD_SIZE" in os.environ else 1
-    if num_gpus > 1 and args.local_rank == 0:
+    num_gpus = int(os.environ.get("WORLD_SIZE", 1))
+    if num_gpus > 1 and args.distributed and args.local_rank == 0:
         if not os.path.exists(args.log_dir):
             os.makedirs(args.log_dir)
         if not os.path.exists(args.save_dir):
@@ -162,6 +163,9 @@ class Trainer(object):
                                             aux=args.aux, 
                                             norm_layer=BatchNorm2d,
                                             num_class=train_dataset.num_class).to(self.device)
+        
+        if args.distributed:
+            self.model = nn.parallel.DistributedDataParallel(self.model, device_ids=[args.local_rank], output_device=args.local_rank)
 
         self.model.eval()
         with torch.no_grad():
@@ -218,20 +222,23 @@ class Trainer(object):
         return cur_lr
 
     def reduce_tensor(self, tensor):
-        rt = tensor.clone()
-        dist.all_reduce(rt, op=dist.ReduceOp.SUM)
-        return rt
+        if self.args.distributed:
+            rt = tensor.clone()
+            dist.all_reduce(rt, op=dist.ReduceOp.SUM)
+            return rt
+        return tensor
 
 
-    def reduce_mean_tensor(self, tensor):
-        rt = tensor.clone()
-        dist.all_reduce(rt, op=dist.ReduceOp.SUM)
-        rt /= self.num_gpus
-        return rt
+    def reduce_tensor(self, tensor):
+        if self.args.distributed:
+            rt = tensor.clone()
+            dist.all_reduce(rt, op=dist.ReduceOp.SUM)
+            return rt
+        return tensor
 
         
     def train(self):
-        save_to_disk = get_rank() == 0
+        save_to_disk = get_rank() == 0 if self.args.distributed else True
         log_per_iters, val_per_iters = self.args.log_iter, self.args.val_per_iters
         save_per_iters = self.args.save_per_iters
         start_time = time.time()
