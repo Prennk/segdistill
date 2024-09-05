@@ -3,6 +3,7 @@ python3 train_baseline.py \
     --model deeplabv3 \
     --backbone resnet18 \
     --aux \
+    --max-iterations 15000 \
     --dataset camvid \
     --crop-size 480 360 \
     --data data/CamVid/ \
