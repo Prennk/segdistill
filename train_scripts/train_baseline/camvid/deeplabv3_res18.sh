@@ -6,7 +6,7 @@ python3 train_baseline.py \
     --data data/CamVid/ \
     --save-dir save/ \
     --log-dir save/ \
-    --pretrained None
+    --pretrained "None"
 
 
 # CUDA_VISIBLE_DEVICES=0 \
