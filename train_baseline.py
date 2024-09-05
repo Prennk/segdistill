@@ -70,7 +70,7 @@ def parse_args():
     # cuda setting
     parser.add_argument('--no-cuda', action='store_true', default=False,
                         help='disables CUDA training')
-    parser.add_argument('--local_rank', type=int, default=0)
+    parser.add_argument('--local_rank', type=int, default=os.getenv('LOCAL_RANK', 0)
     # checkpoint and log
     parser.add_argument('--resume', type=str, default=None,
                         help='put the path to resuming file if needed')
@@ -360,7 +360,7 @@ if __name__ == '__main__':
     args = parse_args()
 
     # reference maskrcnn-benchmark
-    num_gpus = int(os.environ["WORLD_SIZE"]) if "WORLD_SIZE" in os.environ else 1
+    num_gpus = int(os.environ.get("WORLD_SIZE", 1))
     args.num_gpus = num_gpus
     args.distributed = num_gpus > 1
     if not args.no_cuda and torch.cuda.is_available():
