@@ -184,13 +184,8 @@ class Trainer(object):
             else:
                 raise ValueError('Checkpoint file not found')
 
-        # create optimizer
-        if args.optimizer == 'adam':
-            self.optimizer = torch.optim.Adam(self.model.parameters(), lr=args.lr, weight_decay=args.weight_decay)
-        elif args.optimizer == 'sgd':
-            self.optimizer = torch.optim.SGD(self.model.parameters(), lr=args.lr, momentum=args.momentum, weight_decay=args.weight_decay)
-        else:
-            raise ValueError('Optimizer not supported')
+
+        self.optimizer = torch.optim.SGD(self.model.parameters(), lr=args.lr, momentum=args.momentum, weight_decay=args.weight_decay)
 
         # create loss function
         self.criterion = SegCrossEntropyLoss(ignore_index=args.ignore_label, aux_weight=args.aux_weight).to(self.device)
