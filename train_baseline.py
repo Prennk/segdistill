@@ -150,7 +150,7 @@ class Trainer(object):
 
         self.model.eval()
         with torch.no_grad():
-            self.logger.info('Params: %.2fM FLOPs: %.2fG'
+            logger.info('Params: %.2fM FLOPs: %.2fG'
                 % (cal_param_size(self.model) / 1e6, cal_multi_adds(self.model, (1, 3, 1024, 2048))/1e9))
         
 
