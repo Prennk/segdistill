@@ -295,15 +295,21 @@ class Trainer(object):
         return cur_lr
 
     def reduce_tensor(self, tensor):
-        rt = tensor.clone()
-        dist.all_reduce(rt, op=dist.ReduceOp.SUM)
-        return rt
+        if self.args.distributed:
+            rt = tensor.clone()
+            dist.all_reduce(rt, op=dist.ReduceOp.SUM)
+            return rt
+        else:
+            return tensor
 
     def reduce_mean_tensor(self, tensor):
-        rt = tensor.clone()
-        dist.all_reduce(rt, op=dist.ReduceOp.SUM)
-        rt /= self.num_gpus
-        return rt
+        if self.args.distributed:
+            rt = tensor.clone()
+            dist.all_reduce(rt, op=dist.ReduceOp.SUM)
+            rt /= self.num_gpus
+            return rt
+        else:
+            return tensor
 
     def train(self):
         save_to_disk = get_rank() == 0
