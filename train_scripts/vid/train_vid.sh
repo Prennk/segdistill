@@ -10,7 +10,7 @@ python3 train_vid.py \
     --save-dir save/ \
     --log-dir save/ \
     --teacher-pretrained deeplabv3_resnet101_cirkd.pth \
-    --pretrained-base resnet18-imagenet.pth
+    --student-pretrained-base resnet18-imagenet.pth
 
 
 # python3 eval.py \
