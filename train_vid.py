@@ -331,6 +331,7 @@ class Trainer(object):
             
             
             layers = ["layer1", "layer2", "layer3", "layer4", "aspp"]
+            print(len(self.criterion_kd))
             kd_losses = [self.criterion_kd[i](s_outputs[layer], t_outputs[layer]) for i, layer in enumerate(layers)]
             kd_loss = sum(kd_losses)
 
