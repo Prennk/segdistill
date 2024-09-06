@@ -247,8 +247,8 @@ class Trainer(object):
         self.criterion_kd = [VIDLoss(
             num_input_channels=s_channel, 
             num_mid_channel=t_channel,
-            num_target_channels=t_channel)
-            for t_channel, s_channel in zip(t_channels, s_channels).to(self.device)]
+            num_target_channels=t_channel).to(self.device)
+            for t_channel, s_channel in zip(t_channels, s_channels)]
         # self.criterion_minibatch = CriterionMiniBatchCrossImagePair(temperature=args.contrast_temperature).to(self.device)
         # self.criterion_memory_contrast = StudentSegContrast(num_classes=train_dataset.num_class,
         #                                              pixel_memory_size=args.pixel_memory_size,
