@@ -230,7 +230,7 @@ class Trainer(object):
         s_y = self.s_model(x)
         t_channels = []
         s_channels = []
-        layers = ["layer1", "layer2", "layer3", "layer4", "aspp"]
+        layers = ["aspp", "layer4", "layer3", "layer2", "layer1"]
         for key, value in t_y.items():
             if key in layers:
                 print(f"Teacher => {args.teacher_model}-{args.teacher_backbone}")
@@ -330,7 +330,7 @@ class Trainer(object):
                 task_loss = self.criterion(s_outputs["out"], targets)
             
             
-            layers = ["layer1", "layer2", "layer3", "layer4", "aspp"]
+            layers = ["aspp", "layer4", "layer3", "layer2", "layer1"]
             kd_losses = [self.criterion_kd[i](s_outputs[layer], t_outputs[layer]) for i, layer in enumerate(layers)]
             kd_loss = sum(kd_losses)
 
