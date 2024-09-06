@@ -241,6 +241,9 @@ class Trainer(object):
                 print(f"Student => {args.student_model}-{args.student_backbone}")
                 print(f"{key}: {value.shape}")
                 t_channels.append(value.shape[1])
+
+        print(len(t_channels))
+        print(len(s_channels))
             
         self.criterion = SegCrossEntropyLoss(ignore_index=args.ignore_label).to(self.device)
         # self.criterion_kd = CriterionKD(temperature=args.kd_temperature).to(self.device)
@@ -248,7 +251,7 @@ class Trainer(object):
             num_input_channels=s_channel, 
             num_mid_channel=t_channel,
             num_target_channels=t_channel).to(self.device)
-            for t_channel, s_channel in enumerate(zip(t_channels, s_channels))]
+            for t_channel, s_channel in zip(t_channels, s_channels)]
         print(len(self.criterion_kd))
         # self.criterion_minibatch = CriterionMiniBatchCrossImagePair(temperature=args.contrast_temperature).to(self.device)
         # self.criterion_memory_contrast = StudentSegContrast(num_classes=train_dataset.num_class,
