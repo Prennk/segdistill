@@ -233,12 +233,12 @@ class Trainer(object):
         for key, value in t_y.items():
             if key.startswith("layer"):
                 print(f"Teacher => {args.teacher_model}-{args.teacher_backbone}")
-                print(f"{key}: {value}")
+                print(f"{key}: {value.shape}")
                 t_channels.append(value.shape[1])
         for key, value in s_y.items():
             if key.startswith("layer"):
                 print(f"Student => {args.student_model}-{args.student_backbone}")
-                print(f"{key}: {value}")
+                print(f"{key}: {value.shape}")
                 t_channels.append(value.shape[1])
         
         # self.criterion = SegCrossEntropyLoss(ignore_index=args.ignore_label).to(self.device)
@@ -247,7 +247,7 @@ class Trainer(object):
             num_input_channels=s_channel, 
             num_mid_channel=t_channel,
             num_target_channels=t_channel)
-            for t_channel, s_channel in zip(t_channels, s_channels)].to(self.device)
+            for t_channel, s_channel in zip(t_channels, s_channels)]
         # self.criterion_minibatch = CriterionMiniBatchCrossImagePair(temperature=args.contrast_temperature).to(self.device)
         # self.criterion_memory_contrast = StudentSegContrast(num_classes=train_dataset.num_class,
         #                                              pixel_memory_size=args.pixel_memory_size,
@@ -265,6 +265,7 @@ class Trainer(object):
         for criterion in self.criterion_kd:
             params_list.append(criterion)
         params_list.append(self.s_model)
+        params_list.to(self.device)
         # params_list.append(self.criterion_memory_contrast)
 
 
