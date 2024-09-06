@@ -248,7 +248,7 @@ class Trainer(object):
             num_input_channels=s_channel, 
             num_mid_channel=t_channel,
             num_target_channels=t_channel).to(self.device)
-            for t_channel, s_channel in zip(t_channels, s_channels)]
+            for t_channel, s_channel in enumerate(zip(t_channels, s_channels))]
         # self.criterion_minibatch = CriterionMiniBatchCrossImagePair(temperature=args.contrast_temperature).to(self.device)
         # self.criterion_memory_contrast = StudentSegContrast(num_classes=train_dataset.num_class,
         #                                              pixel_memory_size=args.pixel_memory_size,
@@ -331,7 +331,6 @@ class Trainer(object):
             
             
             layers = ["layer1", "layer2", "layer3", "layer4", "aspp"]
-            print(len(self.criterion_kd))
             kd_losses = [self.criterion_kd[i](s_outputs[layer], t_outputs[layer]) for i, layer in enumerate(layers)]
             kd_loss = sum(kd_losses)
 
