@@ -231,12 +231,12 @@ class Trainer(object):
         t_channels = []
         s_channels = []
         for key, value in t_y.items():
-            if key.startwith("layer"):
+            if key.startswith("layer"):
                 print(f"Teacher => {args.teacher_model}-{args.teacher_backbone}")
                 print(f"{key}: {value}")
                 t_channels.append(value.shape[1])
         for key, value in s_y.items():
-            if key.startwith("layer"):
+            if key.startswith("layer"):
                 print(f"Student => {args.student_model}-{args.student_backbone}")
                 print(f"{key}: {value}")
                 t_channels.append(value.shape[1])
