@@ -231,17 +231,15 @@ class Trainer(object):
         t_channels = []
         s_channels = []
         for key, value in t_y.items():
-            if key.startswith("layer"):
-                print(f"Teacher => {args.teacher_model}-{args.teacher_backbone}")
-                print(f"{key}: {value.shape}")
-                t_channels.append(value.shape[1])
+            print(f"Teacher => {args.teacher_model}-{args.teacher_backbone}")
+            print(f"{key}: {value.shape}")
+            t_channels.append(value.shape[1])
         for key, value in s_y.items():
-            if key.startswith("layer"):
-                print(f"Student => {args.student_model}-{args.student_backbone}")
-                print(f"{key}: {value.shape}")
-                t_channels.append(value.shape[1])
+            print(f"Student => {args.student_model}-{args.student_backbone}")
+            print(f"{key}: {value.shape}")
+            t_channels.append(value.shape[1])
         
-        # self.criterion = SegCrossEntropyLoss(ignore_index=args.ignore_label).to(self.device)
+        self.criterion = SegCrossEntropyLoss(ignore_index=args.ignore_label).to(self.device)
         # self.criterion_kd = CriterionKD(temperature=args.kd_temperature).to(self.device)
         self.criterion_kd = [VIDLoss(
             num_input_channels=s_channel, 
@@ -366,15 +364,21 @@ class Trainer(object):
             eta_string = str(datetime.timedelta(seconds=int(eta_seconds)))
 
             if iteration % log_per_iters == 0 and save_to_disk:
+                # logger.info(
+                #     "Iters: {:d}/{:d} || Lr: {:.6f} || Task Loss: {:.4f} || KD Loss: {:.4f}" \
+                #     "|| Mini-batch p2p Loss: {:.4f} || Memory p2p Loss: {:.4f} || Memory p2r Loss: {:.4f} " \
+                #         "|| Cost Time: {} || Estimated Time: {}".format(
+                #         iteration, args.max_iterations, self.optimizer.param_groups[0]['lr'], task_losses_reduced.item(),
+                #         kd_losses_reduced.item(), 
+                #         minibatch_pixel_contrast_loss_reduced.item(),
+                #         memory_pixel_contrast_loss_reduced.item(),
+                #         memory_region_contrast_loss_reduced.item(),
+                #         str(datetime.timedelta(seconds=int(time.time() - start_time))), eta_string))
                 logger.info(
                     "Iters: {:d}/{:d} || Lr: {:.6f} || Task Loss: {:.4f} || KD Loss: {:.4f}" \
-                    "|| Mini-batch p2p Loss: {:.4f} || Memory p2p Loss: {:.4f} || Memory p2r Loss: {:.4f} " \
-                        "|| Cost Time: {} || Estimated Time: {}".format(
-                        iteration, args.max_iterations, self.optimizer.param_groups[0]['lr'], task_losses_reduced.item(),
+                    "|| Cost Time: {} || Estimated Time: {}".format(
+                        iteration, args.max_iterations, self.optimizer.param_groups[-1]['lr'], task_losses_reduced.item(),
                         kd_losses_reduced.item(), 
-                        # minibatch_pixel_contrast_loss_reduced.item(),
-                        # memory_pixel_contrast_loss_reduced.item(),
-                        # memory_region_contrast_loss_reduced.item(),
                         str(datetime.timedelta(seconds=int(time.time() - start_time))), eta_string))
 
             if iteration % save_per_iters == 0 and save_to_disk:
