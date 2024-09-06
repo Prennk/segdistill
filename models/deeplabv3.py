@@ -50,7 +50,21 @@ class DeepLabV3(SegBaseModel):
 
         if self.aux:
             auxout = self.auxlayer(c3)
-        return [x, auxout, x_feat_after_aspp]
+            return {"x": x,
+                "aux": auxout,
+                "aspp": x_feat_after_aspp,
+                "layer4": c4,
+                "layer3": c3,
+                "layer2": c2,
+                "layer1": c1}
+        else:
+            return {"x": x,
+                "aspp": x_feat_after_aspp,
+                "layer4": c4,
+                "layer3": c3,
+                "layer2": c2,
+                "layer1": c1}
+        # return [x, auxout, x_feat_after_aspp]
         
  
 class _FCNHead(nn.Module):
