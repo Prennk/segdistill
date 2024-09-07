@@ -146,7 +146,7 @@ class Evaluator(object):
         interp = nn.Upsample(size=tile_size, mode='bilinear', align_corners=True)
         prediction = net(image.cuda())
         if isinstance(prediction, tuple) or isinstance(prediction, list):
-            prediction = prediction[0]
+            prediction = prediction["out"]
         prediction = interp(prediction)
         return prediction
 
