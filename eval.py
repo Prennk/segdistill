@@ -178,6 +178,8 @@ class Evaluator(object):
                     print("Predicting image scaled by %f" % scale)
                     scale_image = F.interpolate(image, scale_factor=scale, mode='bilinear', align_corners=True)
                     scaled_probs = self.predict_whole(model, scale_image, tile_size)
+                    
+                    end_time = timer()
 
                     if args.flip_eval:
                         print("flip evaluation")
@@ -186,7 +188,6 @@ class Evaluator(object):
                     full_probs += scaled_probs
                 full_probs /= len(scales)  
 
-            end_time = timer()
             inference_time = (end_time - start_time) * 1000
             total_time += inference_time
             count += 1
