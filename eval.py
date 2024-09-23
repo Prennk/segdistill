@@ -3,6 +3,7 @@ from __future__ import print_function
 import os
 import sys
 import argparse
+from timeit import default_timer as timer
 cur_path = os.path.abspath(os.path.dirname(__file__))
 root_path = os.path.split(cur_path)[0]
 sys.path.append(root_path)
@@ -157,6 +158,10 @@ class Evaluator(object):
             model = self.model.module
         else:
             model = self.model
+
+        total_time = 0
+        count = 0
+
         logger.info("Start validation, Total sample: {:d}".format(len(self.val_loader)))
         for i, (image, target, filename) in enumerate(self.val_loader):
             image = image.to(self.device)
@@ -166,6 +171,7 @@ class Evaluator(object):
             tile_size = (H_, W_)
             full_probs = torch.zeros((1, self.val_dataset.num_class, H_, W_)).cuda()
             scales = args.scales
+            start_time = timer()
             with torch.no_grad():
                 for scale in scales:
                     scale = float(scale)
@@ -179,6 +185,13 @@ class Evaluator(object):
                         scaled_probs = 0.5 * (scaled_probs + torch.flip(flip_scaled_probs, dims=[3]))
                     full_probs += scaled_probs
                 full_probs /= len(scales)  
+
+            end_time = timer()
+            inference_time = (end_time - start_time) * 1000
+            total_time += inference_time
+            count += 1
+
+            logger.info(f"Sample {i + 1} inference time: {inference_time:.2f} ms")
             
             self.metric.update(full_probs, target)
             pixAcc, mIoU = self.metric.get()
@@ -212,6 +225,9 @@ class Evaluator(object):
 
             logger.info("Overall validation pixAcc: {:.3f}, mIoU: {:.3f}".format(
             pixAcc.item() * 100, mIoU * 100))
+
+            avg_inference_time = total_time / count
+            logger.info(f"Average inference time per image: {avg_inference_time:.2f} ms")
 
         synchronize()
 
