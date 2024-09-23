@@ -171,14 +171,13 @@ class Evaluator(object):
             tile_size = (H_, W_)
             full_probs = torch.zeros((1, self.val_dataset.num_class, H_, W_)).cuda()
             scales = args.scales
-            start_time = timer()
             with torch.no_grad():
                 for scale in scales:
                     scale = float(scale)
                     print("Predicting image scaled by %f" % scale)
                     scale_image = F.interpolate(image, scale_factor=scale, mode='bilinear', align_corners=True)
+                    start_time = timer()
                     scaled_probs = self.predict_whole(model, scale_image, tile_size)
-                    
                     end_time = timer()
 
                     if args.flip_eval:
@@ -210,6 +209,9 @@ class Evaluator(object):
                     mask = get_color_pallete(predict, self.args.dataset)
                     mask.save(os.path.join(args.outdir, os.path.splitext(filename[1][0])[0] + '.png'))
 
+        avg_inference_time = total_time / count
+        logger.info(f"Average inference time per image: {avg_inference_time:.2f} ms")
+        
         if self.num_gpus > 1:
             sum_total_correct = torch.tensor(self.metric.total_correct).cuda().to(args.local_rank)
             sum_total_label = torch.tensor(self.metric.total_label).cuda().to(args.local_rank)
@@ -226,9 +228,6 @@ class Evaluator(object):
 
             logger.info("Overall validation pixAcc: {:.3f}, mIoU: {:.3f}".format(
             pixAcc.item() * 100, mIoU * 100))
-
-            avg_inference_time = total_time / count
-            logger.info(f"Average inference time per image: {avg_inference_time:.2f} ms")
 
         synchronize()
 
