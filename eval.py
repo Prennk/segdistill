@@ -145,7 +145,12 @@ class Evaluator(object):
 
     def predict_whole(self, net, image, tile_size):
         interp = nn.Upsample(size=tile_size, mode='bilinear', align_corners=True)
+        start_time = timer()
         prediction = net(image.cuda())
+        end_time = timer()
+        inference_time = (end_time - start_time) * 1000
+        logger.info(f"inference time per image w/o overhead: {inference_time:.2f} ms")
+
         if isinstance(prediction, tuple) or isinstance(prediction, list) or isinstance(prediction, dict):
             prediction = prediction[0]
         prediction = interp(prediction)
