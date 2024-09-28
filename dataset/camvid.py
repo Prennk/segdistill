@@ -104,6 +104,7 @@ class CamvidValSet(data.Dataset):
         self.files = []
         for item in self.img_ids:
             image_path, label_path = item
+            print(f"label_path: {label_path}")
             name = osp.splitext(osp.basename(label_path))[0]
             img_file = osp.join(self.root, image_path)
             label_file = osp.join(self.root, label_path)
@@ -131,6 +132,7 @@ class CamvidValSet(data.Dataset):
         datafiles = self.files[index]
         image = cv2.imread(datafiles["img"], cv2.IMREAD_COLOR)
         label = cv2.imread(datafiles["label"], cv2.IMREAD_GRAYSCALE)
+        print(f"label: {label}")
 
         label = self.id2trainId(label)
         
