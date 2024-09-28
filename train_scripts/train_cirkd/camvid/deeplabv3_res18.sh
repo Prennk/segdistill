@@ -8,7 +8,7 @@ python3 train_cirkd.py \
     --data data/CamVid/ \
     --save-dir save/ \
     --log-dir save/ \
-    --teacher-pretrained save/deeplabv3_resnet101_camvid_best_model.pth \
+    --teacher-pretrained deeplabv3_resnet101_cirkd.pth \
     --student-pretrained-base resnet18-imagenet.pth
 
 
