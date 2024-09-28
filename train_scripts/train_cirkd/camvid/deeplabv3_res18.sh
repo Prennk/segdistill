@@ -19,4 +19,4 @@ python3 eval.py \
   --dataset camvid \
   --data data/CamVid/ \
   --save-dir save/ \
-  --pretrained kd_deeplabv3_resnet18_camvid.pth
+  --pretrained save/kd_deeplabv3_resnet18_camvid.pth

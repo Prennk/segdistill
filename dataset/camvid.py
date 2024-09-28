@@ -105,6 +105,12 @@ class CamvidValSet(data.Dataset):
         for item in self.img_ids:
             image_path, label_path = item
             print(f"label_path: {label_path}")
+            img = cv2.imread('data/CamVid/testannot/0001TP_008550_converted.jpg', cv2.IMREAD_GRAYSCALE)
+            if img is None:
+                print("Failed to load image!")
+            else:
+                print("Image loaded successfully!")
+
             name = osp.splitext(osp.basename(label_path))[0]
             img_file = osp.join(self.root, image_path)
             label_file = osp.join(self.root, label_path)
