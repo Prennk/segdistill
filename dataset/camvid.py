@@ -104,12 +104,6 @@ class CamvidValSet(data.Dataset):
         self.files = []
         for item in self.img_ids:
             image_path, label_path = item
-            print(f"label_path: {label_path}")
-            img = cv2.imread('data/CamVid/testannot/0001TP_008550.png', cv2.IMREAD_GRAYSCALE)
-            if img is None:
-                print("Failed to load image!")
-            else:
-                print("Image loaded successfully!")
 
             name = osp.splitext(osp.basename(label_path))[0]
             img_file = osp.join(self.root, image_path)
@@ -129,6 +123,7 @@ class CamvidValSet(data.Dataset):
 
 
     def id2trainId(self, label):
+        print(f"label: {label}")
         label_copy = label.copy().astype('int32')
         label_copy[label == 11] = -1
         return label_copy
@@ -138,7 +133,6 @@ class CamvidValSet(data.Dataset):
         datafiles = self.files[index]
         image = cv2.imread(datafiles["img"], cv2.IMREAD_COLOR)
         label = cv2.imread(datafiles["label"], cv2.IMREAD_GRAYSCALE)
-        print(f"label: {label}")
 
         label = self.id2trainId(label)
         
