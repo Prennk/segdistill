@@ -10,8 +10,7 @@ python3 train_cirkd.py \
     --save-dir save/ \
     --log-dir save/ \
     --teacher-pretrained deeplabv3_resnet101_cirkd.pth \
-    --student-pretrained-base resnet18-imagenet.pth \
-    --resume save/kd_deeplabv3_resnet18_camvid.pth
+    --student-pretrained-base resnet18-imagenet.pth
 
 
 python3 eval.py \
