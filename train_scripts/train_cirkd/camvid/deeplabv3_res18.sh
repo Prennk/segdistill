@@ -4,6 +4,7 @@ python3 train_cirkd.py \
     --teacher-backbone resnet101 \
     --student-backbone resnet18 \
     --dataset camvid \
+    --batch-size 8 \
     --crop-size 360 480 \
     --data data/CamVid/ \
     --save-dir save/ \
