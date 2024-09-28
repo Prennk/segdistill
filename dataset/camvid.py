@@ -104,7 +104,6 @@ class CamvidValSet(data.Dataset):
         self.files = []
         for item in self.img_ids:
             image_path, label_path = item
-
             name = osp.splitext(osp.basename(label_path))[0]
             img_file = osp.join(self.root, image_path)
             label_file = osp.join(self.root, label_path)
