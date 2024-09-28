@@ -274,15 +274,22 @@ class Trainer(object):
         return cur_lr
 
     def reduce_tensor(self, tensor):
-        rt = tensor.clone()
-        dist.all_reduce(rt, op=dist.ReduceOp.SUM)
-        return rt
+        if self.args.distributed:
+            rt = tensor.clone()
+            dist.all_reduce(rt, op=dist.ReduceOp.SUM)
+            return rt
+        else:
+            return tensor
+
 
     def reduce_mean_tensor(self, tensor):
-        rt = tensor.clone()
-        dist.all_reduce(rt, op=dist.ReduceOp.SUM)
-        rt /= self.num_gpus
-        return rt
+        if self.args.distributed:
+            rt = tensor.clone()
+            dist.all_reduce(rt, op=dist.ReduceOp.SUM)
+            rt /= self.num_gpus
+            return rt
+        else:
+            return tensor
 
     def train(self):
         save_to_disk = get_rank() == 0
@@ -456,6 +463,7 @@ if __name__ == '__main__':
     logger = setup_logger("semantic_segmentation", args.log_dir, get_rank(), filename='{}_{}_{}_log.txt'.format(
         args.student_model, args.teacher_backbone, args.student_backbone, args.dataset))
     logger.info("Using {} GPUs".format(num_gpus))
+    logger.info("Distributed: {}".format(args.distributed))
     logger.info(args)
 
     trainer = Trainer(args)
