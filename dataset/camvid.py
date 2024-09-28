@@ -24,6 +24,8 @@ class CamvidTrainSet(data.Dataset):
         self.files = []
         for item in self.img_ids:
             image_path, label_path = item
+            print(f"label_path: {label_path}")
+            print()
             name = osp.splitext(osp.basename(label_path))[0]
             img_file = osp.join(self.root, image_path)
             label_file = osp.join(self.root, label_path)
@@ -48,6 +50,7 @@ class CamvidTrainSet(data.Dataset):
 
 
     def id2trainId(self, label):
+        print(f"label: {label}")
         label_copy = label.copy().astype('int32')
         label_copy[label == 11] = -1
         return label_copy
