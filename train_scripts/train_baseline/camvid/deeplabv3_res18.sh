@@ -1,10 +1,9 @@
-
 python3 train_baseline.py \
     --model deeplabv3 \
     --backbone resnet18 \
     --aux \
     --dataset camvid \
-    --crop-size 480 360 \
+    --crop-size 360 480 \
     --data data/CamVid/ \
     --save-dir save/ \
     --log-dir save/ \
