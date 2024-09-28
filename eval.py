@@ -149,7 +149,6 @@ class Evaluator(object):
         prediction = net(image.cuda())
         end_time = timer()
         inference_time = (end_time - start_time) * 1000
-        logger.info(f"inference time per image w/o overhead: {inference_time:.2f} ms")
 
         if isinstance(prediction, tuple) or isinstance(prediction, list) or isinstance(prediction, dict):
             prediction = prediction[0]
@@ -163,9 +162,6 @@ class Evaluator(object):
             model = self.model.module
         else:
             model = self.model
-
-        total_time = 0
-        count = 0
 
         logger.info("Start validation, Total sample: {:d}".format(len(self.val_loader)))
         for i, (image, target, filename) in enumerate(self.val_loader):
@@ -181,9 +177,7 @@ class Evaluator(object):
                     scale = float(scale)
                     print("Predicting image scaled by %f" % scale)
                     scale_image = F.interpolate(image, scale_factor=scale, mode='bilinear', align_corners=True)
-                    start_time = timer()
                     scaled_probs = self.predict_whole(model, scale_image, tile_size)
-                    end_time = timer()
 
                     if args.flip_eval:
                         print("flip evaluation")
@@ -191,12 +185,6 @@ class Evaluator(object):
                         scaled_probs = 0.5 * (scaled_probs + torch.flip(flip_scaled_probs, dims=[3]))
                     full_probs += scaled_probs
                 full_probs /= len(scales)  
-
-            inference_time = (end_time - start_time) * 1000
-            total_time += inference_time
-            count += 1
-
-            logger.info(f"Sample {i + 1} inference time: {inference_time:.2f} ms")
             
             self.metric.update(full_probs, target)
             pixAcc, mIoU = self.metric.get()
@@ -213,9 +201,6 @@ class Evaluator(object):
                 else:
                     mask = get_color_pallete(predict, self.args.dataset)
                     mask.save(os.path.join(args.outdir, os.path.splitext(filename[1][0])[0] + '.png'))
-
-        avg_inference_time = total_time / count
-        logger.info(f"Average inference time per image: {avg_inference_time:.2f} ms")
         
         if self.num_gpus > 1:
             sum_total_correct = torch.tensor(self.metric.total_correct).cuda().to(args.local_rank)
