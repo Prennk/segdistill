@@ -48,6 +48,7 @@ class CamvidTrainSet(data.Dataset):
 
 
     def id2trainId(self, label):
+        print(f"label: {label}")
         label_copy = label.copy().astype('int32')
         label_copy[label == 11] = -1
         return label_copy
@@ -122,7 +123,6 @@ class CamvidValSet(data.Dataset):
 
 
     def id2trainId(self, label):
-        print(f"label: {label}")
         label_copy = label.copy().astype('int32')
         label_copy[label == 11] = -1
         return label_copy
