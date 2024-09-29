@@ -3,7 +3,7 @@ python3 train_kd.py \
     --student-model deeplabv3 \
     --teacher-backbone resnet101 \
     --student-backbone resnet18 \
-    --lamda-kd 1. \
+    --lambda-kd 1. \
     --lambda-skd 0 \
     --lambda-cwd-fea 0 \
     --lambda-cwd-logit 0\
