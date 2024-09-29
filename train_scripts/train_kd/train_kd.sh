@@ -4,13 +4,13 @@ python3 train_kd.py \
     --teacher-backbone resnet101 \
     --student-backbone resnet18 \
     --lamda-kd 1. \
-    --lambda-skd 0. \
-    --lambda_cwd_fea 0. \
-    --lambda_cwd_logit 0.\
-    --lambda_ifv 0. \
-    --lambda_fitnet 0. \
-    --lambda_at 0. \
-    --lambda_psd 0.\
+    --lambda-skd 0 \
+    --lambda-cwd_fea 0 \
+    --lambda-cwd_logit 0\
+    --lambda-ifv 0 \
+    --lambda-fitnet 0 \
+    --lambda-at 0 \
+    --lambda-psd 0\
     --crop-size 360 480 \
     --dataset camvid \
     --data data/CamVid/ \
