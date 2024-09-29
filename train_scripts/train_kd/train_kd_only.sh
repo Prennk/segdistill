@@ -1,4 +1,4 @@
-python3 train_only_kd.py \
+python3 train_kd_only.py \
     --teacher-model deeplabv3 \
     --student-model deeplabv3 \
     --teacher-backbone resnet101 \
