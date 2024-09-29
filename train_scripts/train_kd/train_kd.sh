@@ -5,8 +5,8 @@ python3 train_kd.py \
     --student-backbone resnet18 \
     --lamda-kd 1. \
     --lambda-skd 0 \
-    --lambda-cwd_fea 0 \
-    --lambda-cwd_logit 0\
+    --lambda-cwd-fea 0 \
+    --lambda-cwd-logit 0\
     --lambda-ifv 0 \
     --lambda-fitnet 0 \
     --lambda-at 0 \
