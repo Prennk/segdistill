@@ -217,25 +217,7 @@ class Trainer(object):
                 print('Resuming training, loading {}...'.format(args.resume))
                 self.s_model.load_state_dict(torch.load(args.resume, map_location=lambda storage, loc: storage))
 
-        # create criterion
-        width, height = args.crop_size
-        x = torch.randn(1,3,width,height).cuda()
-        t_y = self.t_model(x)
-        s_y = self.s_model(x)
-        t_channels = []
-        s_channels = []
-        layers = ["aspp", "layer4", "layer3", "layer2", "layer1"]
-        for key, value in t_y.items():
-            if key in layers:
-                print(f"Teacher => {args.teacher_model}-{args.teacher_backbone}")
-                print(f"{key}: {value.shape}")
-                t_channels.append(value.shape[1])
-        for key, value in s_y.items():
-            if key in layers:
-                print(f"Student => {args.student_model}-{args.student_backbone}")
-                print(f"{key}: {value.shape}")
-                s_channels.append(value.shape[1])
-            
+        # create criterion  
         self.criterion = SegCrossEntropyLoss(ignore_index=args.ignore_label).to(self.device)
         self.criterion_kd = CriterionKD(temperature=args.kd_temperature).to(self.device)
 
@@ -401,7 +383,7 @@ def save_checkpoint(model, args, is_best=False):
     directory = os.path.expanduser(args.save_dir)
     if not os.path.exists(directory):
         os.makedirs(directory)
-    filename = 'kd_{}_{}_{}_kd.pth'.format(args.student_model, args.student_backbone, args.dataset)
+    filename = 'kd_{}_{}_{}.pth'.format(args.student_model, args.student_backbone, args.dataset)
     filename = os.path.join(directory, filename)
 
     if args.distributed:
@@ -409,7 +391,7 @@ def save_checkpoint(model, args, is_best=False):
     
     torch.save(model.state_dict(), filename)
     if is_best:
-        best_filename = 'kd_{}_{}_{}_best_model_kd.pth'.format(args.student_model, args.student_backbone, args.dataset)
+        best_filename = 'kd_{}_{}_{}_best_model.pth'.format(args.student_model, args.student_backbone, args.dataset)
         best_filename = os.path.join(directory, best_filename)
         shutil.copyfile(filename, best_filename)
 

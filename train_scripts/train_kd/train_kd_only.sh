@@ -18,4 +18,4 @@ python3 eval.py \
     --data data/CamVid/ \
     --data-list data/CamVid/test.txt \
     --crop-size 480 360 \
-    --pretrained save/kd_deeplabv3_resnet18_camvid_best_model_kd.pth \
+    --pretrained save/kd_deeplabv3_resnet18_camvid_best_model.pth \
