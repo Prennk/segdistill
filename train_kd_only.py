@@ -286,9 +286,9 @@ class Trainer(object):
             s_outputs = self.s_model(images)
             
             if self.args.aux:
-                task_loss = self.criterion(s_outputs["aux"], targets) + 0.4 * self.criterion(s_outputs["out"], targets)
+                task_loss = self.criterion(s_outputs[0], targets) + (0.4 * self.criterion(s_outputs[1], targets))
             else:
-                task_loss = self.criterion(s_outputs["out"], targets)
+                task_loss = self.criterion(s_outputs[1], targets)
 
             kd_loss = self.args.lambda_kd * self.criterion_kd(s_outputs[0], t_outputs[0])
             
