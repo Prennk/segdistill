@@ -274,6 +274,7 @@ class Trainer(object):
         logger.info('Start training, Total Iterations {:d}'.format(args.max_iterations))
 
         self.s_model.train()
+        self.t_model.eval()
         for iteration, (images, targets, _) in enumerate(self.train_loader):
             iteration = iteration + 1
             
@@ -281,7 +282,7 @@ class Trainer(object):
             targets = targets.long().to(self.device)
             
             with torch.no_grad():
-                t_outputs = self.t_model(images)
+                t_outputs = self.t_model(images).detach()
 
             s_outputs = self.s_model(images)
             
