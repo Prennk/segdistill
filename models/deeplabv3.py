@@ -50,9 +50,9 @@ class DeepLabV3(SegBaseModel):
 
         if self.aux:
             auxout = self.auxlayer(c3)
-            return [x, auxout, x_feat_after_aspp]
+            return [x, auxout, x_feat_after_aspp, c4]
         else:
-            return [x, x_feat_after_aspp]
+            return [x, x_feat_after_aspp, c4]
         
  
 class _FCNHead(nn.Module):

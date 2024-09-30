@@ -230,17 +230,10 @@ class Trainer(object):
         s_y = self.s_model(x)
         t_channels = []
         s_channels = []
-        layers = ["aspp", "layer4", "layer3", "layer2", "layer1"]
-        for key, value in t_y.items():
-            if key in layers:
-                print(f"Teacher => {args.teacher_model}-{args.teacher_backbone}")
-                print(f"{key}: {value.shape}")
-                t_channels.append(value.shape[1])
-        for key, value in s_y.items():
-            if key in layers:
-                print(f"Student => {args.student_model}-{args.student_backbone}")
-                print(f"{key}: {value.shape}")
-                s_channels.append(value.shape[1])
+        for output in t_y:
+            t_channels.append(output.shape[1])
+        for output in s_y:
+            s_channels.append(output.shape[1])
             
         self.criterion = SegCrossEntropyLoss(ignore_index=args.ignore_label).to(self.device)
         self.criterion_kd = [VIDLoss(
@@ -316,27 +309,12 @@ class Trainer(object):
             s_outputs = self.s_model(images)
             
             if self.args.aux:
-                task_loss = self.criterion(s_outputs["aux"], targets) + 0.4 * self.criterion(s_outputs["out"], targets)
+                task_loss = self.criterion(s_outputs[1], targets) + 0.4 * self.criterion(s_outputs[0], targets)
             else:
-                task_loss = self.criterion(s_outputs["out"], targets)
+                task_loss = self.criterion(s_outputs[0], targets)
             
-            
-            layers = ["aspp", "layer4", "layer3", "layer2", "layer1"]
-            kd_losses = [self.criterion_kd[i](s_outputs[layer], t_outputs[layer]) for i, layer in enumerate(layers)]
+            kd_losses = [c(s, t) for c, s, t in zip(self.criterion_kd, s_outputs, t_outputs)]
             kd_loss = sum(kd_losses)
-
-            # kd_loss = self.args.lambda_kd * self.criterion_kd(s_outputs[0], t_outputs[0])
-
-            # minibatch_pixel_contrast_loss = \
-            #     self.args.lambda_minibatch_pixel * self.criterion_minibatch(s_outputs[-1], t_outputs[-1])
-
-            # _, predict = torch.max(s_outputs[0], dim=1) 
-            # memory_pixel_contrast_loss, memory_region_contrast_loss = \
-            #     self.criterion_memory_contrast(s_outputs[-1], t_outputs[-1].detach(), targets, predict)
-            
-            # memory_pixel_contrast_loss = self.args.lambda_memory_pixel * memory_pixel_contrast_loss
-            # memory_region_contrast_loss = self.args.lambda_memory_region * memory_region_contrast_loss
-
             
             losses = task_loss + kd_loss
             
@@ -347,28 +325,14 @@ class Trainer(object):
 
             task_losses_reduced = self.reduce_mean_tensor(task_loss)
             kd_losses_reduced = self.reduce_mean_tensor(kd_loss)
-
-            # minibatch_pixel_contrast_loss_reduced = self.reduce_mean_tensor(minibatch_pixel_contrast_loss)
-            # memory_pixel_contrast_loss_reduced = self.reduce_mean_tensor(memory_pixel_contrast_loss)
-            # memory_region_contrast_loss_reduced = self.reduce_mean_tensor(memory_region_contrast_loss)
             
             
             eta_seconds = ((time.time() - start_time) / iteration) * (args.max_iterations - iteration)
             eta_string = str(datetime.timedelta(seconds=int(eta_seconds)))
 
             if iteration % log_per_iters == 0 and save_to_disk:
-                # logger.info(
-                #     "Iters: {:d}/{:d} || Lr: {:.6f} || Task Loss: {:.4f} || KD Loss: {:.4f}" \
-                #     "|| Mini-batch p2p Loss: {:.4f} || Memory p2p Loss: {:.4f} || Memory p2r Loss: {:.4f} " \
-                #         "|| Cost Time: {} || Estimated Time: {}".format(
-                #         iteration, args.max_iterations, self.optimizer.param_groups[0]['lr'], task_losses_reduced.item(),
-                #         kd_losses_reduced.item(), 
-                #         minibatch_pixel_contrast_loss_reduced.item(),
-                #         memory_pixel_contrast_loss_reduced.item(),
-                #         memory_region_contrast_loss_reduced.item(),
-                #         str(datetime.timedelta(seconds=int(time.time() - start_time))), eta_string))
                 logger.info(
-                    "Iters: {:d}/{:d} || Lr: {:.6f} || Task Loss: {:.4f} || KD Loss: {:.4f}" \
+                    "Iters: {:d}/{:d} || Lr: {:.6f} || Task Loss: {:.4f} || VID Loss: {:.4f}" \
                     "|| Cost Time: {} || Estimated Time: {}".format(
                         iteration, args.max_iterations, self.optimizer.param_groups[-1]['lr'], task_losses_reduced.item(),
                         kd_losses_reduced.item(), 
@@ -407,9 +371,9 @@ class Trainer(object):
                 outputs = model(image)
 
             B, H, W = target.size()
-            outputs["out"] = F.interpolate(outputs["out"], (H, W), mode='bilinear', align_corners=True)
+            outputs[0] = F.interpolate(outputs[0], (H, W), mode='bilinear', align_corners=True)
 
-            self.metric.update(outputs["out"], target)
+            self.metric.update(outputs[0], target)
             pixAcc, mIoU = self.metric.get()
             logger.info("Sample: {:d}, Validation pixAcc: {:.3f}, mIoU: {:.3f}".format(i + 1, pixAcc, mIoU))
         
