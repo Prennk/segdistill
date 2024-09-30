@@ -1,4 +1,5 @@
 python3 train_kd_only.py \
+    --max-iterations 20000 \
     --teacher-model deeplabv3 \
     --student-model deeplabv3 \
     --teacher-backbone resnet101 \
