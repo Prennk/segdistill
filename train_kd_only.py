@@ -202,12 +202,6 @@ class Trainer(object):
                                             aux=args.aux, 
                                             norm_layer=BatchNorm2d,
                                             num_class=train_dataset.num_class).to(self.device)
-        
-        for t_n, t_p in self.t_model.named_parameters():
-            t_p.requires_grad = False
-        self.t_model.eval()
-        self.s_model.eval()
-
 
         # resume checkpoint if needed
         if args.resume:
