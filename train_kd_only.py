@@ -341,9 +341,9 @@ class Trainer(object):
                 outputs = model(image)
 
             B, H, W = target.size()
-            outputs["out"] = F.interpolate(outputs["out"], (H, W), mode='bilinear', align_corners=True)
+            outputs[0] = F.interpolate(outputs[0], (H, W), mode='bilinear', align_corners=True)
 
-            self.metric.update(outputs["out"], target)
+            self.metric.update(outputs[0], target)
             pixAcc, mIoU = self.metric.get()
             logger.info("Sample: {:d}, Validation pixAcc: {:.3f}, mIoU: {:.3f}".format(i + 1, pixAcc, mIoU))
         

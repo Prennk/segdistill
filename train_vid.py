@@ -243,31 +243,16 @@ class Trainer(object):
                 s_channels.append(value.shape[1])
             
         self.criterion = SegCrossEntropyLoss(ignore_index=args.ignore_label).to(self.device)
-        # self.criterion_kd = CriterionKD(temperature=args.kd_temperature).to(self.device)
         self.criterion_kd = [VIDLoss(
             num_input_channels=s_channel, 
             num_mid_channel=t_channel,
             num_target_channels=t_channel).to(self.device)
             for t_channel, s_channel in zip(t_channels, s_channels)]
-        # self.criterion_minibatch = CriterionMiniBatchCrossImagePair(temperature=args.contrast_temperature).to(self.device)
-        # self.criterion_memory_contrast = StudentSegContrast(num_classes=train_dataset.num_class,
-        #                                              pixel_memory_size=args.pixel_memory_size,
-        #                                              region_memory_size=args.region_memory_size,
-        #                                              region_contrast_size=args.region_contrast_size//train_dataset.num_class+1,
-        #                                              pixel_contrast_size=args.pixel_contrast_size//train_dataset.num_class+1,
-        #                                              contrast_kd_temperature=args.contrast_kd_temperature,
-        #                                              contrast_temperature=args.contrast_temperature,
-        #                                              s_channels=s_channels,
-        #                                              t_channels=t_channels, 
-        #                                              ignore_label=args.ignore_label).to(self.device)
 
-    
         params_list = nn.ModuleList([])
         for criterion in self.criterion_kd:
             params_list.append(criterion)
         params_list.append(self.s_model)
-        # params_list.append(self.criterion_memory_contrast)
-
 
         self.optimizer = torch.optim.SGD(params_list.parameters(),
                                          lr=args.lr,
