@@ -276,7 +276,7 @@ class Trainer(object):
             targets = targets.long().to(self.device)
             
             with torch.no_grad():
-                t_outputs = self.t_model(images).detach()
+                t_outputs = self.t_model(images)
 
             s_outputs = self.s_model(images)
             
