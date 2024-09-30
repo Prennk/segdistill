@@ -408,7 +408,7 @@ def save_checkpoint(model, args, is_best=False):
     directory = os.path.expanduser(args.save_dir)
     if not os.path.exists(directory):
         os.makedirs(directory)
-    filename = 'kd_{}_{}_{}.pth'.format(args.student_model, args.student_backbone, args.dataset)
+    filename = 'vid_{}_{}_{}.pth'.format(args.student_model, args.student_backbone, args.dataset)
     filename = os.path.join(directory, filename)
 
     if args.distributed:
@@ -416,7 +416,7 @@ def save_checkpoint(model, args, is_best=False):
     
     torch.save(model.state_dict(), filename)
     if is_best:
-        best_filename = 'kd_{}_{}_{}_best_model.pth'.format(args.student_model, args.student_backbone, args.dataset)
+        best_filename = 'vid_{}_{}_{}_best_model.pth'.format(args.student_model, args.student_backbone, args.dataset)
         best_filename = os.path.join(directory, best_filename)
         shutil.copyfile(filename, best_filename)
 
