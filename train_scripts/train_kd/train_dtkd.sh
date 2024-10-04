@@ -1,4 +1,4 @@
-python3 train_fsp.py \
+python3 train_dtkd.py \
     --max-iterations 20000 \
     --teacher-model deeplabv3 \
     --student-model deeplabv3 \
