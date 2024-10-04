@@ -234,6 +234,8 @@ class Trainer(object):
         t_shapes.append(t_y[3].shape)
         s_shapes.append(s_y[2].shape)
         s_shapes.append(s_y[3].shape)
+        print(f"t_shape: {t_shapes}")
+        print(f"s_shape: {s_shapes}")
             
         self.criterion = SegCrossEntropyLoss(ignore_index=args.ignore_label).to(self.device)
         self.criterion_kd = FSP(s_shapes=s_shapes, t_shapes=t_shapes)
