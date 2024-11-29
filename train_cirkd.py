@@ -437,7 +437,7 @@ def save_checkpoint(model, args, is_best=False):
     
     torch.save(model.state_dict(), filename)
     if is_best:
-        best_filename = 'kd_{}_{}_{}_best_model.pth'.format(args.student_model, args.student_backbone, args.dataset)
+        best_filename = 'cirkd_{}_{}_{}_best_model.pth'.format(args.student_model, args.student_backbone, args.dataset)
         best_filename = os.path.join(directory, best_filename)
         shutil.copyfile(filename, best_filename)
 

@@ -5,6 +5,7 @@ from .deeplabv3 import *
 from .deeplabv3_mobile import *
 from .psp_mobile import *
 from .segformer import *
+from .enet import *
 
 
 __all__ = ['get_segmentation_model']
@@ -17,5 +18,6 @@ def get_segmentation_model(model, **kwargs):
         'deeplab_mobile': get_deeplabv3_mobile,
         'psp_mobile': get_psp_mobile,
         'segformer': get_segformer,
+        'enet': get_enet,
     }
     return models[model](**kwargs)
