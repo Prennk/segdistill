@@ -320,6 +320,9 @@ class Trainer(object):
             if self.args.student_model == "enet":
                 s_outputs = F.interpolate(s_outputs[0], size=t_outputs[0].shape[2:], mode='bilinear', align_corners=False)
 
+            print("s_outputs shape:", s_outputs[0].shape)
+            print("t_outputs shape:", t_outputs[0].shape)
+
             kd_loss = self.args.lambda_kd * self.criterion_kd(s_outputs[0], t_outputs[0])
 
             minibatch_pixel_contrast_loss = \
