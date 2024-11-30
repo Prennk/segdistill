@@ -132,6 +132,8 @@ def parse_args():
         args.aux = True
     elif args.student_backbone.startswith('mobile'):
         args.aux = False
+    elif args.student_model == "enet":
+        args.aux = False
     else:
         raise ValueError('no such network')
 
