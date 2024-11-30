@@ -317,8 +317,9 @@ class Trainer(object):
             else:
                 task_loss = self.criterion(s_outputs[0], targets)
             
-            print(f"s_outputs[0]: {s_outputs[0].shape}")
-            print(f"t_outputs[0]: {t_outputs[0].shape}")
+            if self.args.student_model == "enet":
+                s_outputs = F.interpolate(s_outputs[0], size=t_outputs[0].shape[2:], mode='bilinear', align_corners=False)
+
             kd_loss = self.args.lambda_kd * self.criterion_kd(s_outputs[0], t_outputs[0])
 
             minibatch_pixel_contrast_loss = \
