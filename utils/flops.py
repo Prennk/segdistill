@@ -55,9 +55,9 @@ def cal_multi_adds(model, shape=(2,3,32,32)):
     data = torch.zeros(shape).cuda()
 
     def new_forward(m):
-        def lambda_forward(x):
+        def lambda_forward(x, *args, **kwargs): # *args dan **kwargs biar gak error soalnya enet gak cuma perlu x doang
             measure_layer(m, x)
-            return m.old_forward(x)
+            return m.old_forward(x, *args, **kwargs)
         return lambda_forward
 
     def modify_forward(model):
